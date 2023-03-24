@@ -1,7 +1,9 @@
 package com.jakut.shop.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "user")
 public class User {
@@ -18,5 +20,9 @@ public class User {
 
     @Column(name = "password")
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column
+    private Role role;
 
 }
