@@ -3,10 +3,12 @@ package com.jakut.shop.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "product")
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,13 +17,9 @@ public class User {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "username")
-    private String username;
+    @Column(name = "price")
+    private BigDecimal price;
 
-    @Column(name = "password")
-    private String password;
-
-    @Enumerated(EnumType.STRING)
-    @Column
-    private Role role;
+    @Column(name = "descripton")
+    private String description;
 }
