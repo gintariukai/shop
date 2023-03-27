@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -7,6 +8,20 @@
         http://www.liquibase.org/xml/ns/dbchangelog-ext https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
         http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
 
-    <include file="db/changelog/db.changelog-1.0.xml"/>
+    <changeSet id="1" author="sha">
+        <sql>
+            CREATE TABLE user (
+                    id BIGINT NOT NULL AUTO_INCREMENT,
+                username VARCHAR(50) NOT NULL ,
+                password VARCHAR(50) NOT NULL ,
+                name VARCHAR(50) NOT NULL ,
+                role VARCHAR(50) NOT NULL ,
+                CONSTRAINT PK_id PRIMARY KEY (id)
+            );
+        </sql>
+        <rollback>
+            DROP table user;
+        </rollback>
+    </changeSet>
 
 </databaseChangeLog>
