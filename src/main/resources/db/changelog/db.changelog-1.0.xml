@@ -27,4 +27,57 @@
         </rollback>
     </changeSet>
 
+    <changeSet id="2" author="jakut">
+        <sql>
+            CREATE TABLE product
+            (
+                id       BIGINT       NOT NULL AUTO_INCREMENT,
+                name VARCHAR(255) NOT NULL,
+                price DOUBLE,
+                description VARCHAR(1000),
+                CONSTRAINT PK_id PRIMARY KEY (id)
+            );
+        </sql>
+        <rollback>
+            DROP TABLE product;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="3" author="jakut">
+        <sql>
+            INSERT INTO product (name, price, description) values("Product 1", 26.50, "Puikiai atpalaiduoja susivėlusius plaukus. Gerina iššukavimą ir giliai drėkina plaukus jų neapsunkindamas. Atstato ir rekonstruoja plaukų struktūrą....");
+            INSERT INTO product (name, price, description) values("Product 2", 22.00, "Rekonstruoja plaukų struktūrą, jie tampa minkštais, žvilgančiais ir švelniais. Išlaiko drėgmę plaukų struktūros viduje. Maitina plaukus jų neapsunkindama...");
+            INSERT INTO product (name, price, description) values("Product 3", 19.99, "Šampūnas regeneruojantis ir rekonstruojantis plaukų struktūrą. Atgaivina pažeistus, chemiškai paveiktus, trapius, porėtus, matinius ir drėgmę praradusius plaukus...");
+            INSERT INTO product (name, price, description) values("Product 4", 49.90, "Regeneruojanti ir giliai plaukus rekonstruojanti priemonė. Ypatinga produkto sudėtis regeneruoja ir modifikuoja plaukų struktūrą. Plaukai tampa sveikesni ir žvilgantys....");
+            INSERT INTO product (name, price, description) values("Product 5", 20.00, "Atgaivinantis, energizuojantis, valantis šampūnas visų tipų plaukams. Šampūno formulė stiprina plaukų svogūnėlius ir sumažina plaukų slinkimo tikimybę....");
+            INSERT INTO product (name, price, description) values("Product 6", 20.99, "Apimtį didinantis, stiprinantis, valantis šampūnas riebioms problemoms ir hiperhidrozei spręsti. ...");
+            INSERT INTO product (name, price, description) values("Product 7", 22.50, "Tai plaukus stiprinantis kondicionierius. Regeneruoja, maitina plaukus, bet neapsunkina jų. Mažina sebumo kaupimąsi ir yra kaip prevencinė priemonė prieš plaukų slinkimą....");
+            INSERT INTO product (name, price, description) values("Product 8", 23.00, "Plaukus formuojančios putos, suteikiančios naturalią apimtį. Tinka įvairių tipų plaukams....");
+            INSERT INTO product (name, price, description) values("Product 9", 29.99, "Švelnus plaukų ir kūno prausiklis puikiai tinkantis po deginimosi saulėje ar aktyvios fizinės veiklos. Drėkina odą ir suteikia plaukams aksominio šilkiškumo...");
+            INSERT INTO product (name, price, description) values("Product 10", 19.00, "Stipraus atstančio poveikio kondicionierius, praturtintas jogurto ir levandos maitinančiomis savybėmis. ...");
+
+        </sql>
+        <rollback>
+            TRUNCATE TABLE product;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="4" author="jakut">
+        <sql>
+            CREATE TABLE transaction
+            (
+                    id BIGINT NOT NULL AUTO_INCREMENT,
+                product_id BIGINT NOT NULL,
+                user_id BIGINT NOT NULL,
+                purchase_date DATETIME NOT NULL,
+                CONSTRAINT PK_id PRIMARY KEY (id),
+                CONSTRAINT fk_tran_product FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                CONSTRAINT fk_tran_user FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
+            );
+        </sql>
+        <rollback>
+            DROP TABLE transaction;
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>
