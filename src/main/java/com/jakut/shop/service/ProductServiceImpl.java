@@ -3,16 +3,16 @@ package com.jakut.shop.service;
 import com.jakut.shop.model.Product;
 import com.jakut.shop.repository.ProductRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Data
 @Service
 @Transactional
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
     private ProductRepository productRepository;
 
     @Override

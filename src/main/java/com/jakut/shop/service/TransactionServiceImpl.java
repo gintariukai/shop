@@ -2,17 +2,17 @@ package com.jakut.shop.service;
 
 import com.jakut.shop.model.Transaction;
 import com.jakut.shop.repository.TransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Data;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
 
+@Data
 @Service
 @Transactional
 public class TransactionServiceImpl implements TransactionService {
 
-    @Autowired
     private TransactionRepository transactionRepository;
 
     @Override
