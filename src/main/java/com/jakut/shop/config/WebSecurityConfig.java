@@ -1,5 +1,6 @@
 package com.jakut.shop.config;
 
+import com.jakut.shop.jwt.JWRAuthorizationFilter;
 import com.jakut.shop.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfiguration {
                 .csrf().disable();
 
         //jwt filter
-        http.addFilter(new JWTAutorizationFilter(http.authenticationManager(), jwtTokenProvider));
+        http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtTokenProvider));
     }
 
     @Override

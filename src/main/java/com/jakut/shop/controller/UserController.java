@@ -1,5 +1,6 @@
 package com.jakut.shop.controller;
 
+import com.jakut.shop.jwt.JwtTokenProvider;
 import com.jakut.shop.model.Role;
 import com.jakut.shop.model.Transaction;
 import com.jakut.shop.model.User;
@@ -7,8 +8,11 @@ import com.jakut.shop.service.ProductService;
 import com.jakut.shop.service.TransactionService;
 import com.jakut.shop.service.UserService;
 import lombok.Data;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +24,8 @@ import java.time.LocalDateTime;
 @Data
 @RestController
 public class UserController {
+
+    private JwtTokenProvider tokenProvider;
 
     private UserService userService;
 
@@ -40,11 +46,16 @@ public class UserController {
     @GetMapping("/api/user/login")
     public ResponseEntity<?> getUser(Principal principal) {
         //principal = httpServletRequest.getUserPrincipal();
-        if (principal == null || principal.getName() == null) {
+        if (principal == null) {
             //logout will also use here, so we should return ok http status
             return ResponseEntity.ok(principal);
         }
-        return new ResponseEntity<>(userService.findByUsername(principal.getName()), HttpStatus.OK);
+        UsernamePasswordAuthenticationToken authenticationToken =
+                (UsernamePasswordAuthenticationToken) principal;
+        User user = userService.findByUsername(authenticationToken.getName());
+        user.setToken(tokenProvider.generateToken(authenticationToken));
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping("/api/user/purchase")
