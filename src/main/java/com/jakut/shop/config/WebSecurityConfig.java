@@ -4,9 +4,9 @@ import com.jakut.shop.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -15,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurer {
+public class WebSecurityConfig extends WebSecurityConfiguration {
 
 
     private JwtTokenProvider jwtTokenProvider;
@@ -51,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurer {
                 .csrf().disable();
 
         //jwt filter
-        http.addFilter(new JWTAutorizationFilter(authenticationManager(), jwtTokenProvider));
+        http.addFilter(new JWTAutorizationFilter(http.authenticationManager(), jwtTokenProvider));
     }
 
     @Override
@@ -59,7 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurer {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
-    //Cross origin resource sharing.
+    //Cross-origin resource sharing
     @Bean
     public WebMvcConfigurer corsConfigurer(){
         return new WebMvcConfigurer() {
