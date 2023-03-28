@@ -11,11 +11,11 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 import java.io.IOException;
 
-public class JWRAuthorizationFilter extends BasicAuthenticationFilter {
+public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
     private JwtTokenProvider jwtTokenProvider;
 
-    public JWRAuthorizationFilter(AuthenticationManager authenticationManager,
+    public JWTAuthorizationFilter(AuthenticationManager authenticationManager,
                                   JwtTokenProvider tokenProvider) {
         super(authenticationManager);
         jwtTokenProvider = tokenProvider;
@@ -27,7 +27,7 @@ public class JWRAuthorizationFilter extends BasicAuthenticationFilter {
             throws IOException, ServletException {
         Authentication authentication = jwtTokenProvider.getAuthentication(request);
 
-        if (authentication != null && jwtTokenProvider.validateToken(request)) {
+        if(authentication !=null && jwtTokenProvider.validateToken(request)){
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         chain.doFilter(request, response);

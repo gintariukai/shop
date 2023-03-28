@@ -1,6 +1,8 @@
 package com.jakut.shop.config;
 
-import com.jakut.shop.jwt.JWRAuthorizationFilter;
+
+import com.jakut.shop.jwt.JWTAuthorizationFilter;
+import com.jakut.shop.jwt.JwtTokenProvider;
 import com.jakut.shop.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfiguration {
-
+public class WebSecurityConfig  extends WebSecurityConfiguration {
 
     private JwtTokenProvider jwtTokenProvider;
 
@@ -27,6 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfiguration {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //Cross-origin-resource-sharing: localhost:8080, localhost:4200(allow for it.)
@@ -52,15 +54,17 @@ public class WebSecurityConfig extends WebSecurityConfiguration {
                 .csrf().disable();
 
         //jwt filter
-        http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtTokenProvider));
+        http.addFilter(new JWTAuthorizationFilter(authenticationManager(),jwtTokenProvider));
     }
+
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
-    //Cross-origin resource sharing
+    //Cross-origin resource sharing.
     @Bean
     public WebMvcConfigurer corsConfigurer(){
         return new WebMvcConfigurer() {

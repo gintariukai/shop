@@ -8,11 +8,9 @@ import com.jakut.shop.service.ProductService;
 import com.jakut.shop.service.TransactionService;
 import com.jakut.shop.service.UserService;
 import lombok.Data;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,21 +32,21 @@ public class UserController {
     private TransactionService transactionService;
 
     @PostMapping("/api/user/registration")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        if (userService.findByUsername(user.getUsername()) != null) {
+    public ResponseEntity<?> register(@RequestBody User user){
+        if(userService.findByUsername(user.getUsername())!=null){
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        //default role
+        //default role.
         user.setRole(Role.USER);
         return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
     }
 
     @GetMapping("/api/user/login")
-    public ResponseEntity<?> getUser(Principal principal) {
-        //principal = httpServletRequest.getUserPrincipal();
-        if (principal == null) {
-            //logout will also use here, so we should return ok http status
-            return ResponseEntity.ok(principal);
+    public ResponseEntity<?> getUser(Principal principal){
+        //principal = httpServletRequest.getUserPrincipal.
+        if(principal == null){
+            //logout will also use here so we should return ok http status.
+            return ResponseEntity.ok(null);
         }
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) principal;
@@ -58,14 +56,16 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+
     @PostMapping("/api/user/purchase")
-    public ResponseEntity<?> purchaseProduct(@RequestBody Transaction transaction) {
+    public ResponseEntity<?> purchaseProduct(@RequestBody Transaction transaction){
         transaction.setPurchaseDate(LocalDateTime.now());
-        return new ResponseEntity<>(transactionService.saveTransaction(transaction), HttpStatus.CREATED);
+        transactionService.saveTransaction(transaction);
+        return new ResponseEntity<>(transaction, HttpStatus.CREATED);
     }
 
-    @GetMapping("api/user/products")
-    public ResponseEntity<?> getAllProducts() {
-        return new ResponseEntity<>(productService.findAllProducts(),HttpStatus.OK);
+    @GetMapping("/api/user/products")
+    public ResponseEntity<?> getAllProducts(){
+        return new ResponseEntity<>(productService.findAllProducts(), HttpStatus.OK);
     }
 }
