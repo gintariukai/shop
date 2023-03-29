@@ -51,7 +51,6 @@ public class UserController {
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) principal;
         User user = userService.findByUsername(authenticationToken.getName());
-        user.setToken(tokenProvider.generateToken(authenticationToken));
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }

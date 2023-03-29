@@ -1,7 +1,6 @@
 package com.jakut.shop.config;
 
 
-import com.jakut.shop.jwt.JWTAuthorizationFilter;
 import com.jakut.shop.jwt.JwtTokenProvider;
 import com.jakut.shop.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
