@@ -8,11 +8,9 @@ import com.jakut.shop.service.ProductService;
 import com.jakut.shop.service.TransactionService;
 import com.jakut.shop.service.UserService;
 import lombok.Data;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,12 +46,12 @@ public class UserController {
         //principal = httpServletRequest.getUserPrincipal();
         if (principal == null) {
             //logout will also use here, so we should return ok http status
-            return ResponseEntity.ok(principal);
+            return ResponseEntity.ok(null);
         }
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) principal;
         User user = userService.findByUsername(authenticationToken.getName());
-        user.setToken(tokenProvider.generateToken(authenticationToken));
+//        user.setToken(tokenProvider.generateToken(authenticationToken));
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
