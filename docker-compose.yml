@@ -1,0 +1,37 @@
+version: '3.3'
+
+services:
+  dbproduct:
+    container_name: mysql
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: 'dbproduct'
+      # So you don't have to use root, but you can if you like
+      # You can use whatever password you like
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '3306:3306'
+    expose:
+      # Opens port 3306 on the container
+      - '3306'
+
+  shop_app:
+    container_name: shop_app
+    depends_on:
+      - dbproduct
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: shop_app
+    environment:
+      MYSQL_SERVER_URL: dbproduct
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '8080:8080'
+      - '5005:5005'
+    expose:
+      # Opens port 8080 on the container
+      - '8080'
+      - '5005'

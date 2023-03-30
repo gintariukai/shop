@@ -16,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebSecurityConfig {
@@ -33,7 +35,7 @@ public class WebSecurityConfig {
                 // Configure endpoints authorization requirements
                 .authorizeHttpRequests(auth -> auth
                         //These are public paths
-                        .requestMatchers("/resources/**",  "/error", "/api/user/**").permitAll()
+                        .requestMatchers("/resources/**", "/error", "/api/user/**").permitAll()
                         //These can be reachable for just have admin role.
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         //All remaining paths should need authentication.
@@ -50,6 +52,16 @@ public class WebSecurityConfig {
         http.addFilterBefore(new JwtAuthorizationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**").allowedOrigins("http://localhost:3000");
+            }
+        };
     }
 
     @Profile("h2")    //when a profile for h2 (instead of mysql is used)
