@@ -1,12 +1,13 @@
 package com.jakut.shop.controller;
 
-import com.jakut.shop.AppUtils;
+import com.jakut.shop.util.AppUtils;
+import com.jakut.shop.dto.UserLoginRequestDto;
+import com.jakut.shop.dto.UserLoginResponseDto;
 import com.jakut.shop.jwt.JwtTokenProvider;
 import com.jakut.shop.model.*;
 import com.jakut.shop.service.ProductService;
 import com.jakut.shop.service.TransactionService;
 import com.jakut.shop.service.UserService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

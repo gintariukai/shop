@@ -1,7 +1,7 @@
 package com.jakut.shop.util;
 
-mport com.jakut.shop.model.User;
-import com.jakut.shop.model.UserLoginResponseDto;
+import com.jakut.shop.model.User;
+import com.jakut.shop.dto.UserLoginResponseDto;
 
 public class AppUtils {
 
