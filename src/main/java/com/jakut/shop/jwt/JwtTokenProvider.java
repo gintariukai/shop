@@ -19,11 +19,11 @@ public class JwtTokenProvider {
     @Value("${app.jwt.secret}")
     private String jwtSecret;
 
-    @Value("${app.jwt.token.prefix}")
+    /*@Value("${app.jwt.token.prefix}")
     private String jwtTokenPrefix;
 
     @Value("${app.jwt.header.string}")
-    private String jwtHeaderString;
+    private String jwtHeaderString;*/
 
     @Value("${app.jwt.expiration-in-ms}")
     private Long jwtExpirationInMs;
