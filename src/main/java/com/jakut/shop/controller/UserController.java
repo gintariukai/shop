@@ -1,35 +1,38 @@
 package com.jakut.shop.controller;
 
+import com.jakut.shop.AppUtils;
 import com.jakut.shop.jwt.JwtTokenProvider;
-import com.jakut.shop.model.Role;
-import com.jakut.shop.model.Transaction;
-import com.jakut.shop.model.User;
+import com.jakut.shop.model.*;
 import com.jakut.shop.service.ProductService;
 import com.jakut.shop.service.TransactionService;
 import com.jakut.shop.service.UserService;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
 import java.time.LocalDateTime;
 
-@Data
+@RequiredArgsConstructor
 @RestController
 public class UserController {
 
-    private JwtTokenProvider tokenProvider;
+    private final AuthenticationManager authenticationManager;
 
-    private UserService userService;
+    private final JwtTokenProvider tokenProvider;
 
-    private ProductService productService;
+    private final UserService userService;
 
-    private TransactionService transactionService;
+    private final ProductService productService;
+
+    private final TransactionService transactionService;
 
     @PostMapping("/api/user/registration")
     public ResponseEntity<?> register(@RequestBody User user){
@@ -38,23 +41,34 @@ public class UserController {
         }
         //default role.
         user.setRole(Role.USER);
-        return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
+        return new ResponseEntity<>(AppUtils.toUserLoginResponse(userService.saveUser(user)), HttpStatus.CREATED);
     }
 
-    @GetMapping("/api/user/login")
-    public ResponseEntity<?> getUser(Principal principal){
-        //principal = httpServletRequest.getUserPrincipal.
-        if(principal == null){
-            //logout will also use here so we should return ok http status.
-            return ResponseEntity.ok(null);
-        }
-        UsernamePasswordAuthenticationToken authenticationToken =
-                (UsernamePasswordAuthenticationToken) principal;
-        User user = userService.findByUsername(authenticationToken.getName());
+    @PostMapping("/api/user/login")
+    public UserLoginResponseDto getUser(@RequestBody UserLoginRequestDto loginRequest) {
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        User user = authenticate(loginRequest);
+
+        UserLoginResponseDto response = new UserLoginResponseDto();
+        response.setId(user.getId());
+        response.setToken(generateJwt(user));
+        response.setName(user.getName());
+        response.setUsername(user.getUsername());
+        response.setRole(user.getRole());
+
+        return response;
     }
 
+    private String generateJwt(User user) {
+        return tokenProvider.createToken(user);
+    }
+
+    private User authenticate(UserLoginRequestDto loginRequest) {
+        AbstractAuthenticationToken token =
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
+        return (User) authenticationManager.authenticate(token)
+                .getPrincipal();
+    }
 
     @PostMapping("/api/user/purchase")
     public ResponseEntity<?> purchaseProduct(@RequestBody Transaction transaction){
