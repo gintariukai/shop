@@ -7,7 +7,7 @@
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
         http://www.liquibase.org/xml/ns/dbchangelog-ext https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <preConditions>
-        <runningAs  username="liquibase"/>
+        <runningAs  username="root"/>
     </preConditions>
 
     <changeSet id="1" author="jakut">
